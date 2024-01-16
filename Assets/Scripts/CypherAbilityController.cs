@@ -107,7 +107,6 @@ public class CypherAbilityController : MonoBehaviour
     private void SpawnDecon()
     {
         GameObject instance = Instantiate(actualDeconObj, temporaryDeconObj.transform.position, temporaryDeconObj.transform.rotation);
-        instance.SetActive(true);
         instance.transform.parent = propsHolder;
 
         activeDecon = instance.GetComponent<CypherCamController>();
