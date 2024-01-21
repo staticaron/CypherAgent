@@ -16,6 +16,7 @@ namespace InputManagers
 	{
 		private CypherAbilityController abilityController;
 		private CypherAbility2Controller ability2Controller;
+		private CypherAbility3Controller ability3Controller;
 		private UltimateController ultimateController;
 
 		[SerializeField] CypherMainChannelSO cypherMainChannelSO;
@@ -24,6 +25,7 @@ namespace InputManagers
 		{
 			abilityController = GetComponent<CypherAbilityController>();
 			ability2Controller = GetComponent<CypherAbility2Controller>();
+			ability3Controller = GetComponent<CypherAbility3Controller>();
 			ultimateController = GetComponent<UltimateController>();
 		}
 
@@ -33,7 +35,7 @@ namespace InputManagers
 
 			if (cypherMainChannelSO.RaiseGetState() == AgentState.ABILITY)
 			{
-				abilityController.StopAbility();
+				abilityController.EndAbility();
 				cypherMainChannelSO.RaiseSetState(AgentState.NONE);
 			}
 			else if (cypherMainChannelSO.RaiseGetState() == AgentState.NONE)
@@ -90,7 +92,7 @@ namespace InputManagers
 			if (context.phase != InputActionPhase.Performed) return;
 
 			if (cypherMainChannelSO.RaiseGetState() == AgentState.NONE) ability2Controller.StartAbility();
-			else if (cypherMainChannelSO.RaiseGetState() == AgentState.ABILITY2) ability2Controller.StopAbility();
+			else if (cypherMainChannelSO.RaiseGetState() == AgentState.ABILITY2) ability2Controller.EndAbility();
 		}
 
 		public void OnZ(InputAction.CallbackContext context)
@@ -99,12 +101,20 @@ namespace InputManagers
 
 			if (cypherMainChannelSO.RaiseGetState() == AgentState.NONE)
 			{
-				ultimateController.StartUltimate();
+				ultimateController.StartAbility();
 			}
 			else if (cypherMainChannelSO.RaiseGetState() == AgentState.ULTIMATE)
 			{
-				ultimateController.StopUltimate();
+				ultimateController.EndAbility();
 			}
+		}
+
+		public void OnF(InputAction.CallbackContext context)
+		{
+			if (context.phase != InputActionPhase.Performed) return;
+
+			if (cypherMainChannelSO.RaiseGetState() == AgentState.NONE) ability3Controller.StartAbility();
+			else if (cypherMainChannelSO.RaiseGetState() == AgentState.ABILITY3) ability3Controller.EndAbility();
 		}
 	}
 }

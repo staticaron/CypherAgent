@@ -1,158 +1,158 @@
-using UnityEngine;
-
-using Enums;
-using SO;
 using Core;
+using Enums;
+using Interfaces;
+using SO;
+using UnityEngine;
 
 namespace Cypher
 {
-    [RequireComponent(typeof(Cypher))]
-    public class CypherAbilityController : MonoBehaviour
-    {
-        [SerializeField] float highlightTime;
+	[RequireComponent(typeof(Cypher))]
+	public class CypherAbilityController : MonoBehaviour, IAgentAbility
+	{
+		[SerializeField] float highlightTime;
 
 
 
-        [Header("Layers")]
-        [SerializeField] LayerMask wallLayer;
-        [SerializeField] LayerMask enemyLayer;
+		[Header("Layers")]
+		[SerializeField] LayerMask wallLayer;
+		[SerializeField] LayerMask enemyLayer;
 
-        [Header("Misc")]
-        [SerializeField] Transform propsHolder;
-
-
-
-        [Header("Decon Properties")]
-        [SerializeField] GameObject actualDeconObj;
-        [SerializeField] GameObject temporaryDeconObj;
-        [SerializeField] bool active = false;
-        [SerializeField] bool isInRange = false;
-        [SerializeField] CypherCamController activeDecon = null;
+		[Header("Misc")]
+		[SerializeField] Transform propsHolder;
 
 
 
-        [Header("Laser Properties")]
-        [SerializeField] LineRenderer lineRenderer;
-        [SerializeField] Transform gunStartingPoint;
+		[Header("Decon Properties")]
+		[SerializeField] GameObject actualDeconObj;
+		[SerializeField] GameObject temporaryDeconObj;
+		[SerializeField] bool active = false;
+		[SerializeField] bool isInRange = false;
+		[SerializeField] CypherCamController activeDecon = null;
 
 
 
-        [Header("SOs")]
-        [SerializeField] CypherMainChannelSO cypherMainChannelSO;
+		[Header("Laser Properties")]
+		[SerializeField] LineRenderer lineRenderer;
+		[SerializeField] Transform gunStartingPoint;
 
 
 
-        private Transform mainCamera;
+		[Header("SOs")]
+		[SerializeField] CypherMainChannelSO cypherMainChannelSO;
 
-        private void Awake()
-        {
-            mainCamera = Camera.main.transform;
-        }
 
-        private void LateUpdate()
-        {
-            if (!active) return;
 
-            Ray ray = new Ray(mainCamera.position, mainCamera.forward);
+		private Transform mainCamera;
 
-            RaycastHit hitInfo;
+		private void Awake()
+		{
+			mainCamera = Camera.main.transform;
+		}
 
-            if (Physics.Raycast(ray, out hitInfo, 10, wallLayer))
-            {
-                isInRange = true;
+		private void LateUpdate()
+		{
+			if (!active) return;
 
-                lineRenderer.positionCount = 2;
-                lineRenderer.SetPosition(0, gunStartingPoint.position);
-                lineRenderer.SetPosition(1, hitInfo.point);
+			Ray ray = new Ray(mainCamera.position, mainCamera.forward);
 
-                // Position the decon
-                if (!temporaryDeconObj.activeInHierarchy) temporaryDeconObj.SetActive(true);
-                temporaryDeconObj.transform.position = hitInfo.point;
-                temporaryDeconObj.transform.forward = hitInfo.normal;
-            }
-            else
-            {
-                isInRange = false;
+			RaycastHit hitInfo;
 
-                temporaryDeconObj.SetActive(false);
+			if (Physics.Raycast(ray, out hitInfo, 10, wallLayer))
+			{
+				isInRange = true;
 
-                lineRenderer.positionCount = 0;
-            }
-        }
+				lineRenderer.positionCount = 2;
+				lineRenderer.SetPosition(0, gunStartingPoint.position);
+				lineRenderer.SetPosition(1, hitInfo.point);
 
-        public void Primary()
-        {
-            if (activeDecon != null)
-            {
-                Ray ray = new Ray(mainCamera.position, mainCamera.forward);
-                RaycastHit hitInfo;
+				// Position the decon
+				if (!temporaryDeconObj.activeInHierarchy) temporaryDeconObj.SetActive(true);
+				temporaryDeconObj.transform.position = hitInfo.point;
+				temporaryDeconObj.transform.forward = hitInfo.normal;
+			}
+			else
+			{
+				isInRange = false;
 
-                if (Physics.Raycast(ray, out hitInfo, 1000.0f, enemyLayer))
-                {
-                    hitInfo.collider.GetComponent<Enemy>().EnableHighlights(highlightTime);
-                }
+				temporaryDeconObj.SetActive(false);
 
-                return;
-            }
+				lineRenderer.positionCount = 0;
+			}
+		}
 
-            if (!active) return;
-            if (!isInRange) return;
+		public void Primary()
+		{
+			if (activeDecon != null)
+			{
+				Ray ray = new Ray(mainCamera.position, mainCamera.forward);
+				RaycastHit hitInfo;
 
-            SpawnDecon();
-            StopAbility();
-        }
+				if (Physics.Raycast(ray, out hitInfo, 1000.0f, enemyLayer))
+				{
+					hitInfo.collider.GetComponent<Enemy>().EnableHighlights(highlightTime);
+				}
 
-        public void Secondary()
-        {
-            StopAbility();
-        }
+				return;
+			}
 
-        public void StartAbility()
-        {
-            if (activeDecon)
-            {
-                activeDecon.StartDecon();
-                cypherMainChannelSO.RaiseSetHandState(false);
-                return;
-            }
+			if (!active) return;
+			if (!isInRange) return;
 
-            active = true;
+			SpawnDecon();
+			EndAbility();
+		}
 
-            cypherMainChannelSO.RaiseSetState(AgentState.ABILITY);
-        }
+		public void Secondary()
+		{
+			EndAbility();
+		}
 
-        public void StopAbility()
-        {
-            if (activeDecon)
-            {
-                activeDecon.StopDecon();
-                cypherMainChannelSO.RaiseSetHandState(true);
-            }
+		public void StartAbility()
+		{
+			if (activeDecon)
+			{
+				activeDecon.StartDecon();
+				cypherMainChannelSO.RaiseSetHandState(false);
+				return;
+			}
 
-            active = false;
+			active = true;
 
-            if (temporaryDeconObj.activeInHierarchy) temporaryDeconObj.SetActive(false);
+			cypherMainChannelSO.RaiseSetState(AgentState.ABILITY);
+		}
 
-            lineRenderer.positionCount = 0;
+		public void EndAbility()
+		{
+			if (activeDecon)
+			{
+				activeDecon.StopDecon();
+				cypherMainChannelSO.RaiseSetHandState(true);
+			}
 
-            cypherMainChannelSO.RaiseSetState(AgentState.NONE);
-        }
+			active = false;
 
-        private void SpawnDecon()
-        {
-            GameObject instance = Instantiate(actualDeconObj, temporaryDeconObj.transform.position, temporaryDeconObj.transform.rotation);
-            instance.transform.parent = propsHolder;
+			if (temporaryDeconObj.activeInHierarchy) temporaryDeconObj.SetActive(false);
 
-            activeDecon = instance.GetComponent<CypherCamController>();
-        }
+			lineRenderer.positionCount = 0;
 
-        public void RecallDecon()
-        {
-            if (activeDecon)
-            {
-                Destroy(activeDecon.gameObject);
-                activeDecon = null;
-            }
-        }
-    }
+			cypherMainChannelSO.RaiseSetState(AgentState.NONE);
+		}
+
+		private void SpawnDecon()
+		{
+			GameObject instance = Instantiate(actualDeconObj, temporaryDeconObj.transform.position, temporaryDeconObj.transform.rotation);
+			instance.transform.parent = propsHolder;
+
+			activeDecon = instance.GetComponent<CypherCamController>();
+		}
+
+		public void RecallDecon()
+		{
+			if (activeDecon)
+			{
+				Destroy(activeDecon.gameObject);
+				activeDecon = null;
+			}
+		}
+	}
 }

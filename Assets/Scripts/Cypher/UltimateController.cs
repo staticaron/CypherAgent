@@ -1,11 +1,12 @@
 using DG.Tweening;
+using Interfaces;
 using SO;
 using System.Collections;
 using UnityEngine;
 
 namespace Cypher
 {
-	public class UltimateController : MonoBehaviour
+	public class UltimateController : MonoBehaviour, IAgentAbility
 	{
 		[Header("Ultimate Highlight Options")]
 		[SerializeField] float highlightDuration;   // Highlight duration per beep.
@@ -30,7 +31,7 @@ namespace Cypher
 			mainCam = Camera.main.transform;
 		}
 
-		public void StartUltimate()
+		public void StartAbility()
 		{
 			Ray ray = new Ray(mainCam.position, mainCam.forward);
 			RaycastHit hitInfo;
@@ -59,7 +60,7 @@ namespace Cypher
 			}
 		}
 
-		public void StopUltimate()
+		public void EndAbility()
 		{
 			StopAllCoroutines();
 			agentManagerChannelSO.RaiseCancelHighlightEnemies();

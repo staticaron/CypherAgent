@@ -1,120 +1,120 @@
-using UnityEngine;
-
 using Enums;
+using Interfaces;
 using SO;
+using UnityEngine;
 
 namespace Cypher
 {
 
-    public class CypherAbility2Controller : MonoBehaviour
-    {
-        [SerializeField] LayerMask wallLayer;
-        [SerializeField] float maxDeconSpawnDistance = 10;
+	public class CypherAbility2Controller : MonoBehaviour, IAgentAbility
+	{
+		[SerializeField] LayerMask wallLayer;
+		[SerializeField] float maxDeconSpawnDistance = 10;
 
-        [Space]
-        [SerializeField] bool active = false;
+		[Space]
+		[SerializeField] bool active = false;
 
-        [SerializeField] GameObject actualTripWireObj;
-        [SerializeField] GameObject temporaryDeconObj;
-        [SerializeField] Transform propsHolder;
-        [SerializeField] Transform gunStartingPoint;
-        [SerializeField] LineRenderer handLineRenderer;
+		[SerializeField] GameObject actualTripWireObj;
+		[SerializeField] GameObject temporaryDeconObj;
+		[SerializeField] Transform propsHolder;
+		[SerializeField] Transform gunStartingPoint;
+		[SerializeField] LineRenderer handLineRenderer;
 
-        [SerializeField] float tripWireRange = 5;
+		[SerializeField] float tripWireRange = 5;
 
-        [Header("SOs")]
-        [SerializeField] CypherMainChannelSO cypherMainChannelSO;
+		[Header("SOs")]
+		[SerializeField] CypherMainChannelSO cypherMainChannelSO;
 
-        private bool isInRange = false;
-        private bool canSpawnTripWire = false;
-        private Transform mainCamera;
+		private bool isInRange = false;
+		private bool canSpawnTripWire = false;
+		private Transform mainCamera;
 
-        private void Awake()
-        {
-            mainCamera = Camera.main.transform;
-        }
+		private void Awake()
+		{
+			mainCamera = Camera.main.transform;
+		}
 
-        private void LateUpdate()
-        {
-            if (!active) return;
+		private void LateUpdate()
+		{
+			if (!active) return;
 
-            Ray ray = new Ray(mainCamera.position, mainCamera.forward);
+			Ray ray = new Ray(mainCamera.position, mainCamera.forward);
 
-            RaycastHit hitInfo;
+			RaycastHit hitInfo;
 
-            if (Physics.Raycast(ray, out hitInfo, maxDeconSpawnDistance, wallLayer))
-            {
-                isInRange = true;
+			if (Physics.Raycast(ray, out hitInfo, maxDeconSpawnDistance, wallLayer))
+			{
+				isInRange = true;
 
-                handLineRenderer.positionCount = 2;
-                handLineRenderer.SetPosition(0, gunStartingPoint.position);
-                handLineRenderer.SetPosition(1, hitInfo.point);
+				handLineRenderer.positionCount = 2;
+				handLineRenderer.SetPosition(0, gunStartingPoint.position);
+				handLineRenderer.SetPosition(1, hitInfo.point);
 
-                // Position the decon
-                if (!temporaryDeconObj.activeInHierarchy) temporaryDeconObj.SetActive(true);
-                temporaryDeconObj.transform.position = hitInfo.point;
-                temporaryDeconObj.transform.forward = hitInfo.normal;
+				// Position the decon
+				if (!temporaryDeconObj.activeInHierarchy) temporaryDeconObj.SetActive(true);
+				temporaryDeconObj.transform.position = hitInfo.point;
+				temporaryDeconObj.transform.forward = hitInfo.normal;
 
-                Ray tripWireRangeCheckRay = new Ray(temporaryDeconObj.transform.position, temporaryDeconObj.transform.forward);
+				Ray tripWireRangeCheckRay = new Ray(temporaryDeconObj.transform.position, temporaryDeconObj.transform.forward);
 
-                RaycastHit tripWireRangeCheckInfo;
+				RaycastHit tripWireRangeCheckInfo;
 
-                if (Physics.Raycast(tripWireRangeCheckRay, out tripWireRangeCheckInfo, tripWireRange, wallLayer))
-                {
-                    canSpawnTripWire = true;
-                }
-                else
-                {
-                    canSpawnTripWire = false;
-                }
-            }
-            else
-            {
-                isInRange = false;
+				if (Physics.Raycast(tripWireRangeCheckRay, out tripWireRangeCheckInfo, tripWireRange, wallLayer))
+				{
+					canSpawnTripWire = true;
+				}
+				else
+				{
+					canSpawnTripWire = false;
+				}
+			}
+			else
+			{
+				isInRange = false;
 
-                temporaryDeconObj.SetActive(false);
+				temporaryDeconObj.SetActive(false);
 
-                handLineRenderer.positionCount = 0;
-            }
-        }
+				handLineRenderer.positionCount = 0;
+			}
+		}
 
-        public void StartAbility()
-        {
-            cypherMainChannelSO.RaiseSetState(AgentState.ABILITY2);
+		public void StartAbility()
+		{
+			cypherMainChannelSO.RaiseSetState(AgentState.ABILITY2);
 
-            active = true;
-        }
+			active = true;
+		}
 
-        public void StopAbility()
-        {
-            active = false;
+		public void EndAbility()
+		{
+			active = false;
 
-            handLineRenderer.positionCount = 0;
+			handLineRenderer.positionCount = 0;
 
-            if (temporaryDeconObj.activeInHierarchy) temporaryDeconObj.SetActive(false);
+			if (temporaryDeconObj.activeInHierarchy) temporaryDeconObj.SetActive(false);
 
-            cypherMainChannelSO.RaiseSetState(AgentState.NONE);
-        }
+			cypherMainChannelSO.RaiseSetState(AgentState.NONE);
+		}
 
-        public void Primary()
-        {
-            if (!active) return;
-            if (!isInRange) return;
-            if (!canSpawnTripWire) return;
+		public void Primary()
+		{
+			if (!active) return;
+			if (!isInRange) return;
+			if (!canSpawnTripWire) return;
 
-            SpawnTripWire();
-            StopAbility();
-        }
+			SpawnTripWire();
+			EndAbility();
+		}
 
-        public void Secondary()
-        {
-            StopAbility();
-        }
+		public void Secondary()
+		{
+			EndAbility();
+		}
 
-        private void SpawnTripWire()
-        {
-            GameObject instance = Instantiate<GameObject>(actualTripWireObj, temporaryDeconObj.transform.position, temporaryDeconObj.transform.rotation);
-            instance.transform.parent = propsHolder;
-        }
-    }
+		private void SpawnTripWire()
+		{
+			GameObject instance = Instantiate<GameObject>(actualTripWireObj, temporaryDeconObj.transform.position, temporaryDeconObj.transform.rotation);
+			instance.transform.parent = propsHolder;
+		}
+	}
 }

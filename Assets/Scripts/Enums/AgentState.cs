@@ -5,6 +5,7 @@ namespace Enums
 		ULTIMATE,
 		ABILITY,
 		ABILITY2,
+		ABILITY3,
 		NONE
 	}
 }
