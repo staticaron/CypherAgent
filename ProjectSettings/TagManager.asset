@@ -17,8 +17,8 @@ TagManager:
   - Wall
   - Player/Objects
   - Enemy
+  - Enemy/Highlighted
   - Gun
-  - 
   - 
   - 
   - 

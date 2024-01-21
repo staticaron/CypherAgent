@@ -351,7 +351,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 999251657424047356}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: rayPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -547,7 +547,7 @@ GameObject:
   - component: {fileID: 999251658611593715}
   - component: {fileID: 999251658611593712}
   - component: {fileID: 999251658611593713}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: Hand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -698,7 +698,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 3072
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -955,9 +955,10 @@ GameObject:
   - component: {fileID: 5108435589604138093}
   - component: {fileID: 8812014185426157597}
   - component: {fileID: 999251657305675119}
+  - component: {fileID: 6687724193646258191}
+  - component: {fileID: 2942411287095167352}
   - component: {fileID: 999251657305675118}
   - component: {fileID: 1478716626775314044}
-  - component: {fileID: 6687724193646258191}
   m_Layer: 8
   m_Name: PlayerCapsule
   m_TagString: Player
@@ -1236,6 +1237,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 07f8d319-baf0-4f76-8f6d-5184fc44197b
     m_ActionName: Player/C[/Keyboard/c]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 999251657305675118}
+        m_TargetAssemblyTypeName: InputManagers.AgentInputManager, InputManagers
+        m_MethodName: OnZ
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 9d496af6-fab8-4cc9-94c1-a5032bf6756e
+    m_ActionName: Player/Z[/Keyboard/z]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -1253,19 +1270,66 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 062c1d52245406440940cd52e9dbcfc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  highlightTime: 3
   wallLayer:
     serializedVersion: 2
     m_Bits: 128
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  propsHolder: {fileID: 5117921961432391091}
   actualDeconObj: {fileID: 7125341171191298621, guid: 9ab6661d616780b4a95dcf9ac59f1418,
     type: 3}
   temporaryDeconObj: {fileID: 999251658211287695}
-  propsHolder: {fileID: 5117921961432391091}
-  isInRange: 0
   active: 0
+  isInRange: 0
   activeDecon: {fileID: 0}
   lineRenderer: {fileID: 999251659218306272}
   gunStartingPoint: {fileID: 999251657424047356}
   cypherMainChannelSO: {fileID: 11400000, guid: b7d52321fd2ff354cb496509c705334f,
+    type: 2}
+--- !u!114 &6687724193646258191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8812014185426157585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9d229236ae13a74792cbac2dfbb96e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  maxDeconSpawnDistance: 10
+  active: 0
+  actualTripWireObj: {fileID: 6892689125773224592, guid: aa1b0074e177bf54a81094848e1b8b68,
+    type: 3}
+  temporaryDeconObj: {fileID: 794132513}
+  propsHolder: {fileID: 5117921961432391091}
+  gunStartingPoint: {fileID: 999251657424047356}
+  handLineRenderer: {fileID: 999251659218306272}
+  tripWireRange: 5
+  cypherMainChannelSO: {fileID: 11400000, guid: b7d52321fd2ff354cb496509c705334f,
+    type: 2}
+--- !u!114 &2942411287095167352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8812014185426157585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9514953c704221b42bde55662b39f808, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightDuration: 3
+  numberOfBeeps: 0
+  timeBetweenBeeps: 0
+  agentManagerChannelSO: {fileID: 11400000, guid: bfeba09c4aa1a1c46a94a1173fe5117f,
     type: 2}
 --- !u!114 &999251657305675118
 MonoBehaviour:
@@ -1296,32 +1360,6 @@ MonoBehaviour:
   currentState: 3
   deconInPlace: 0
   gunCam: {fileID: 999251659065382933}
-  cypherMainChannelSO: {fileID: 11400000, guid: b7d52321fd2ff354cb496509c705334f,
-    type: 2}
---- !u!114 &6687724193646258191
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8812014185426157585}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9d229236ae13a74792cbac2dfbb96e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  wallLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  maxDeconSpawnDistance: 10
-  active: 0
-  actualTripWireObj: {fileID: 6892689125773224592, guid: aa1b0074e177bf54a81094848e1b8b68,
-    type: 3}
-  temporaryDeconObj: {fileID: 794132513}
-  propsHolder: {fileID: 5117921961432391091}
-  gunStartingPoint: {fileID: 999251657424047356}
-  handLineRenderer: {fileID: 999251659218306272}
-  tripWireRange: 5
   cypherMainChannelSO: {fileID: 11400000, guid: b7d52321fd2ff354cb496509c705334f,
     type: 2}
 --- !u!1001 &2459530448164636483

@@ -1,68 +1,72 @@
 using UnityEngine;
+using Enums;
 
-[CreateAssetMenu(fileName = "CypherMainChannelSO", menuName = "CypherAbility/CypherMainChannelSO", order = 0)]
-public class CypherMainChannelSO : ScriptableObject
+namespace SO
 {
-    public delegate AgentState getState();
-    public event getState E_GetState;
-
-    public delegate void setState(AgentState stateToSet);
-    public event setState E_SetState;
-
-
-    public AgentState? RaiseGetState()
+    [CreateAssetMenu(fileName = "CypherMainChannelSO", menuName = "CypherAbility/CypherMainChannelSO", order = 0)]
+    public class CypherMainChannelSO : ScriptableObject
     {
-        if (E_GetState != null) return E_GetState.Invoke();
-        else
+        public delegate AgentState getState();
+        public event getState E_GetState;
+
+        public delegate void setState(AgentState stateToSet);
+        public event setState E_SetState;
+
+
+        public AgentState? RaiseGetState()
         {
-            Debug.LogWarning("No one is there to perform GetState!");
-            return null;
+            if (E_GetState != null) return E_GetState.Invoke();
+            else
+            {
+                Debug.LogWarning("No one is there to perform GetState!");
+                return null;
+            }
         }
-    }
 
-    public void RaiseSetState(AgentState stateToSet)
-    {
-        if (E_SetState != null) E_SetState.Invoke(stateToSet);
-        else
+        public void RaiseSetState(AgentState stateToSet)
         {
-            Debug.LogWarning("No one is there to perform GetState!");
+            if (E_SetState != null) E_SetState.Invoke(stateToSet);
+            else
+            {
+                Debug.LogWarning("No one is there to perform GetState!");
+            }
         }
-    }
 
-    public delegate bool deconDeployed();
-    public event deconDeployed E_DeconDeploymentStatus;
+        public delegate bool deconDeployed();
+        public event deconDeployed E_DeconDeploymentStatus;
 
-    public delegate void setDeconStatus(bool place);
-    public event setDeconStatus E_SetDeconStatus;
+        public delegate void setDeconStatus(bool place);
+        public event setDeconStatus E_SetDeconStatus;
 
-    public bool? RaiseDeconDeploymentStatus()
-    {
-        if (E_DeconDeploymentStatus != null) return E_DeconDeploymentStatus.Invoke();
-        else
+        public bool? RaiseDeconDeploymentStatus()
         {
-            Debug.LogWarning("No one is there to perform DeconDeploymentStatus!");
-            return null;
+            if (E_DeconDeploymentStatus != null) return E_DeconDeploymentStatus.Invoke();
+            else
+            {
+                Debug.LogWarning("No one is there to perform DeconDeploymentStatus!");
+                return null;
+            }
         }
-    }
 
-    public void RaiseSetDeconState(bool placed)
-    {
-        if (E_SetDeconStatus != null) E_SetDeconStatus.Invoke(placed);
-        else
+        public void RaiseSetDeconState(bool placed)
         {
-            Debug.LogWarning("No one is there to perform SetDeconState!");
+            if (E_SetDeconStatus != null) E_SetDeconStatus.Invoke(placed);
+            else
+            {
+                Debug.LogWarning("No one is there to perform SetDeconState!");
+            }
         }
-    }
 
-    public delegate void SetHandState(bool enable);
-    public event SetHandState E_SetHandState;
+        public delegate void SetHandState(bool enable);
+        public event SetHandState E_SetHandState;
 
-    public void RaiseSetHandState(bool enable)
-    {
-        if (E_SetHandState != null) E_SetHandState.Invoke(enable);
-        else
+        public void RaiseSetHandState(bool enable)
         {
-            Debug.LogWarning("No one is there to perform SetDeconState!");
+            if (E_SetHandState != null) E_SetHandState.Invoke(enable);
+            else
+            {
+                Debug.LogWarning("No one is there to perform SetDeconState!");
+            }
         }
     }
 }

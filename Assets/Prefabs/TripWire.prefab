@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6892689125345544008}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.075}
+  m_LocalPosition: {x: 0, y: 0, z: 0.05}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -240,7 +240,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94c4e2fee84daee4d9c33a32cb362606, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxRayDistance: 5
+  maxRayCheckDistance: 5
+  highlightTime: 3
   tripWireDetectionLayer:
     serializedVersion: 2
     m_Bits: 640

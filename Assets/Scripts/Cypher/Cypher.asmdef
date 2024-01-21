@@ -1,0 +1,23 @@
+{
+    "name": "Cypher",
+    "rootNamespace": "",
+    "references": [
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:4307f53044263cf4b835bd812fc161a4",
+        "GUID:9822b735367add64294aa9c0416f41e2",
+        "GUID:8d273d9e47f9a0344bafba8db4d74482",
+        "GUID:15fc0a57446b3144c949da3e2b9737a9",
+        "GUID:8bdb63e01914bc442b636fbd65479589",
+        "GUID:4afb8fa8323ac884288fa84be28cf570",
+        "GUID:4c06de372a966ce468302f5a70642d7d"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

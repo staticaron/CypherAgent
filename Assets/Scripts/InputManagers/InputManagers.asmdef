@@ -1,0 +1,19 @@
+{
+    "name": "InputManagers",
+    "rootNamespace": "",
+    "references": [
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:8d273d9e47f9a0344bafba8db4d74482",
+        "GUID:9fa29c1e5260a3d42b8ff471b10199d0",
+        "GUID:9822b735367add64294aa9c0416f41e2"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

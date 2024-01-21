@@ -1,0 +1,16 @@
+{
+    "name": "Cypher.Entities",
+    "rootNamespace": "",
+    "references": [
+        "GUID:4afb8fa8323ac884288fa84be28cf570"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
