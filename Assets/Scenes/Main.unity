@@ -164,6 +164,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2942411287095167352, guid: 48d23d7c73d0c204e9a2024395c1022f,
+        type: 3}
+      propertyPath: activationHeight
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2942411287095167352, guid: 48d23d7c73d0c204e9a2024395c1022f,
+        type: 3}
+      propertyPath: hatRotateSpeedDuringArc
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2942411287095167352, guid: 48d23d7c73d0c204e9a2024395c1022f,
+        type: 3}
+      propertyPath: hatRotateSpeedAfterActivation
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5117921961633686044, guid: 48d23d7c73d0c204e9a2024395c1022f,
         type: 3}
       propertyPath: m_RootOrder

@@ -18,13 +18,18 @@ namespace Cypher
 		[SerializeField] Transform cypherCurvePoint;    // A point that makes up the curve that the hat follows.
 		[SerializeField] Transform cypherHatStartPoint; // A point from where the hat starts moving
 
+		[Header("Tweening Options")]
+		[SerializeField] float hatSpeed;
+		[SerializeField] float activationHeight;
+		[SerializeField] float hatRotateSpeedDuringArc;
+		[SerializeField] float hatRotateSpeedAfterActivation;
+
 		[Header("SOs")]
 		[SerializeField] AgentManagerChannelSO agentManagerChannelSO;
 
 		private Transform mainCam;
 
-		[SerializeField] Vector3 point;
-		[SerializeField] float hatSpeed;
+		private Tweener hatRotator;
 
 		private void Awake()
 		{
@@ -33,21 +38,34 @@ namespace Cypher
 
 		public void StartAbility()
 		{
+			if (cypherHat.gameObject.activeInHierarchy) return;
+
 			Ray ray = new Ray(mainCam.position, mainCam.forward);
 			RaycastHit hitInfo;
 
 			if (Physics.Raycast(ray, out hitInfo, 10))
 			{
-				Vector3[] hatArc = new Vector3[] { cypherCurvePoint.position, hitInfo.point };
+				Vector3[] hatArc = new Vector3[] { cypherCurvePoint.position, hitInfo.point, hitInfo.point + Vector3.up * activationHeight };
 
 				cypherHat.gameObject.SetActive(true);
 				cypherHat.transform.position = cypherHatStartPoint.position;
-				cypherHat.DOPath(hatArc, hatSpeed, PathType.CatmullRom).SetEase(Ease.InOutQuad).OnComplete(() =>
+
+				cypherHat.DOPath(hatArc, hatSpeed, PathType.CatmullRom).SetEase(Ease.InOutQuad)
+					.OnComplete(() =>
 				{
 					StopAllCoroutines();
 
+					hatRotator.Kill();
+					hatRotator = cypherHat.DORotate(new Vector3(0, 360, 0), hatRotateSpeedAfterActivation, RotateMode.LocalAxisAdd);
+					hatRotator.SetEase(Ease.Linear);
+					hatRotator.SetLoops(-1, LoopType.Incremental);
+
 					StartCoroutine(UltimateBeeps());
 				});
+
+				hatRotator = cypherHat.DORotate(new Vector3(0, 360, 0), hatRotateSpeedDuringArc, RotateMode.LocalAxisAdd);
+				hatRotator.SetEase(Ease.Linear);
+				hatRotator.SetLoops(-1, LoopType.Incremental);
 			}
 		}
 
@@ -58,6 +76,10 @@ namespace Cypher
 				agentManagerChannelSO.RaiseHighlightEnemies(highlightDuration);
 				yield return new WaitForSeconds(timeBetweenBeeps);
 			}
+
+			hatRotator.Kill();
+
+			cypherHat.gameObject.SetActive(false);
 		}
 
 		public void EndAbility()
