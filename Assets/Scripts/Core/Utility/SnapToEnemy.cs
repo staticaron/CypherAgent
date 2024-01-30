@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class SnapToEnemy : MonoBehaviour
 {
+	public static SnapToEnemy Instance { get; private set; }
+
+	// Called whenever the currently snapped obj is changed
+	public delegate void SnapUpdate(Vector3? newPosition);
+	public static event SnapUpdate E_SnapUpdate;
+
 	[Header("Snapping Options")]
 	[SerializeField] float maxReach;
 	[SerializeField] LayerMask enemyLayer;
@@ -11,13 +17,23 @@ public class SnapToEnemy : MonoBehaviour
 	[SerializeField] float maxDistanceToSnap;
 
 	[SerializeField] Transform snappedEnemy;
-	[SerializeField] Vector2? snappedEnemyScreenPosition;
+	private Vector2? snappedEnemyScreenPosition;
+
+	private Vector2? SnappedEnemyScreenPosition
+	{
+		get { return snappedEnemyScreenPosition; }
+		set
+		{
+			if (value == snappedEnemyScreenPosition) return;
+
+			snappedEnemyScreenPosition = value;
+			E_SnapUpdate.Invoke(value);
+		}
+	}
 
 	[SerializeField] AgentManagerChannelSO agentManagerChannelSO;
 
 	private Camera mainCam;
-
-	public static SnapToEnemy Instance { get; private set; }
 
 	private void Awake()
 	{
@@ -27,22 +43,31 @@ public class SnapToEnemy : MonoBehaviour
 		else Destroy(gameObject);
 	}
 
-	private void Update()
+	private void LateUpdate()
 	{
 		Transform playerTransform = agentManagerChannelSO.RaiseGetPlayer().GetTransform();
 
 		Collider[] enemiesInRange = Physics.OverlapSphere(playerTransform.position, maxReach, enemyLayer);
 
 		List<Transform> enemiesInFrustum = new List<Transform>();
-
 		List<Vector2> screenPositions = new List<Vector2>();
 
 		foreach (Collider enemy in enemiesInRange)
 		{
 			if (isInCameraFrustum(enemy.GetComponent<Renderer>()))
 			{
-				enemiesInFrustum.Add(enemy.transform);
-				screenPositions.Add(mainCam.WorldToScreenPoint(enemy.transform.position));
+				Vector3 rayDirection = (enemy.transform.position - mainCam.transform.position).normalized;
+				Ray ray = new Ray(mainCam.transform.position, rayDirection);
+
+				if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity))
+				{
+					// Ignore if not in LOS.
+					LayerMask currentLayer = hitInfo.collider.gameObject.layer;
+					if (((enemyLayer >> currentLayer) & 1) != 1) continue;
+
+					enemiesInFrustum.Add(enemy.transform);
+					screenPositions.Add(mainCam.WorldToScreenPoint(enemy.transform.position));
+				}
 			}
 		}
 
@@ -63,7 +88,7 @@ public class SnapToEnemy : MonoBehaviour
 		}
 
 		snappedEnemy = index == -1 ? null : enemiesInFrustum[index];
-		snappedEnemyScreenPosition = index == -1 ? null : screenPositions[index];
+		SnappedEnemyScreenPosition = index == -1 ? null : screenPositions[index];
 	}
 
 	private bool isInCameraFrustum(Renderer _renderer)

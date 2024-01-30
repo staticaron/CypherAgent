@@ -1,8 +1,3 @@
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using UnityEngine;
-
 #if FastScriptReload_CompileViaMCS
 public class McsExeDynamicCompilation : DynamicCompilationBase
 {

@@ -14,9 +14,9 @@ namespace DG.Tweening
 {
 	public static class DOTweenModulePhysics2D
     {
-        #region Shortcuts
+		#region Shortcuts
 
-        #region Rigidbody2D Shortcuts
+		#region Rigidbody2D Shortcuts
 
         /// <summary>Tweens a Rigidbody2D's position to the given value.
         /// Also stores the Rigidbody2D as the tween's target so it can be used for filtered operations</summary>
@@ -61,7 +61,7 @@ namespace DG.Tweening
             return t;
         }
 
-        #region Special
+		#region Special
 
         /// <summary>Tweens a Rigidbody2D's position to the given value, while also applying a jump effect along the Y axis.
         /// Returns a Sequence instead of a Tweener.
@@ -183,11 +183,11 @@ namespace DG.Tweening
             return t;
         }
 
-        #endregion
+		#endregion
 
-        #endregion
+		#endregion
 
-        #endregion
+		#endregion
 	}
 }
 #endif

@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using FastScriptReload.Runtime;
+﻿using FastScriptReload.Runtime;
 using FastScriptReload.Scripts.Runtime;
 using ImmersiveVrToolsCommon.Runtime.Logging;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace FastScriptReload.Editor.Compilation.CodeRewriting
 {
@@ -15,8 +15,8 @@ namespace FastScriptReload.Editor.Compilation.CodeRewriting
 	{
 		private readonly Dictionary<string, List<string>> _typeToNewFieldDeclarations;
 
-		public NewFieldsRewriter(Dictionary<string, List<string>> typeToNewFieldDeclarations, bool writeRewriteReasonAsComment) 
-			:base(writeRewriteReasonAsComment)
+		public NewFieldsRewriter(Dictionary<string, List<string>> typeToNewFieldDeclarations, bool writeRewriteReasonAsComment)
+			: base(writeRewriteReasonAsComment)
 		{
 			_typeToNewFieldDeclarations = typeToNewFieldDeclarations;
 		}
@@ -47,7 +47,7 @@ namespace FastScriptReload.Editor.Compilation.CodeRewriting
 									SyntaxFactory.LiteralExpression(SyntaxKind.StringLiteralExpression, SyntaxFactory.Literal(nameofExpressionParts.Last())), // should take last part only to for actual string eg. 'FieldInThatClass'
 									$"{nameof(NewFieldsRewriter)}:{nameof(VisitInvocationExpression)}");
 							}
-							
+
 						}
 					}
 				}
@@ -69,7 +69,7 @@ namespace FastScriptReload.Editor.Compilation.CodeRewriting
 					{
 						if (allNewFieldNamesForClass.Contains(fieldName))
 						{
-							if(node.Parent is MemberAccessExpressionSyntax memberAccessExpressionSyntax)
+							if (node.Parent is MemberAccessExpressionSyntax memberAccessExpressionSyntax)
 							{
 								//for member access expressions only rewrite if used with .this, eg this.NewField, that prevents rewriting of static class fields with same name
 								if (!memberAccessExpressionSyntax.ToString().StartsWith("this."))
@@ -77,7 +77,7 @@ namespace FastScriptReload.Editor.Compilation.CodeRewriting
 									return base.VisitIdentifierName(node);
 								}
 							}
-							
+
 							var isNameOfExpression = node.Ancestors().OfType<InvocationExpressionSyntax>().Any(e => e.Expression.ToString() == "nameof");
 							if (!isNameOfExpression) //nameof expression will be rewritten via VisitInvocationExpression
 							{

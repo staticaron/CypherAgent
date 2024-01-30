@@ -1,21 +1,16 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using ImmersiveVRTools.Runtime.Common.Utilities;
-
-#if UNITY_EDITOR || LiveScriptReload_Enabled
+﻿#if UNITY_EDITOR || LiveScriptReload_Enabled
 
 namespace FastScriptReload.Runtime
 {
-    public class AssemblyChangesLoaderResolver
-    {
-        private static AssemblyChangesLoaderResolver _instance;
-        public static AssemblyChangesLoaderResolver Instance => _instance ?? (_instance = new AssemblyChangesLoaderResolver());
+	public class AssemblyChangesLoaderResolver
+	{
+		private static AssemblyChangesLoaderResolver _instance;
+		public static AssemblyChangesLoaderResolver Instance => _instance ?? (_instance = new AssemblyChangesLoaderResolver());
 
-        private IAssemblyChangesLoader _cachedNetworkLoader;
-        
-        public IAssemblyChangesLoader Resolve()
-        {
+		private IAssemblyChangesLoader _cachedNetworkLoader;
+
+		public IAssemblyChangesLoader Resolve()
+		{
 #if LiveScriptReload_Enabled
             //network loader is in add-on that's not referenced by this lib, use reflection to get instance
             if (_cachedNetworkLoader == null)
@@ -33,11 +28,11 @@ namespace FastScriptReload.Runtime
 
             return _cachedNetworkLoader;
 #else
-            return AssemblyChangesLoader.Instance;
+			return AssemblyChangesLoader.Instance;
 #endif
 
-        }
-    }
+		}
+	}
 }
 
 #endif

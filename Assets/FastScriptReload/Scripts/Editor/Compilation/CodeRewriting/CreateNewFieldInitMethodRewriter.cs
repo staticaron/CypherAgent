@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using ImmersiveVrToolsCommon.Runtime.Logging;
+﻿using ImmersiveVrToolsCommon.Runtime.Logging;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace FastScriptReload.Editor.Compilation.CodeRewriting
 {
-	class CreateNewFieldInitMethodRewriter: FastScriptReloadCodeRewriterBase {
+	class CreateNewFieldInitMethodRewriter : FastScriptReloadCodeRewriterBase
+	{
 		private readonly Dictionary<string, List<string>> _typeToNewFieldDeclarations;
 		private static readonly string NewFieldsToCreateValueFnDictionaryFieldName = "__Patched_NewFieldNameToInitialValueFn";
 		private static readonly string NewFieldsToGetTypeFnDictionaryFieldName = "__Patched_NewFieldsToGetTypeFnDictionaryFieldName";
@@ -17,16 +18,16 @@ namespace FastScriptReload.Editor.Compilation.CodeRewriting
 
 		public static Dictionary<string, Func<object>> ResolveNewFieldsToCreateValueFn(Type forType)
 		{
-			return (Dictionary<string, Func<object>>) forType.GetField(NewFieldsToCreateValueFnDictionaryFieldName, BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
+			return (Dictionary<string, Func<object>>)forType.GetField(NewFieldsToCreateValueFnDictionaryFieldName, BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
 		}
-		
+
 		public static Dictionary<string, Func<object>> ResolveNewFieldsToTypeFn(Type forType)
 		{
-			return (Dictionary<string, Func<object>>) forType.GetField(NewFieldsToGetTypeFnDictionaryFieldName, BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
+			return (Dictionary<string, Func<object>>)forType.GetField(NewFieldsToGetTypeFnDictionaryFieldName, BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
 		}
 
 		public CreateNewFieldInitMethodRewriter(Dictionary<string, List<string>> typeToNewFieldDeclarations, bool writeRewriteReasonAsComment)
-			:base(writeRewriteReasonAsComment)
+			: base(writeRewriteReasonAsComment)
 		{
 			_typeToNewFieldDeclarations = typeToNewFieldDeclarations;
 		}
@@ -40,7 +41,7 @@ namespace FastScriptReload.Editor.Compilation.CodeRewriting
 			}
 
 			Func<FieldDeclarationSyntax, ExpressionSyntax> getObjectFnSyntax = fieldDeclarationNode => fieldDeclarationNode.Declaration.Variables[0].Initializer?.Value //value captured from initializer
-			                                            ?? SyntaxFactory.DefaultExpression(SyntaxFactory.IdentifierName(fieldDeclarationNode.Declaration.Type.ToString()));
+														?? SyntaxFactory.DefaultExpression(SyntaxFactory.IdentifierName(fieldDeclarationNode.Declaration.Type.ToString()));
 			var withDictionaryFieldNameToInitFieldValue = CreateNewFieldNameToGetObjectFnDictionary(node, newClassFields, getObjectFnSyntax, NewFieldsToCreateValueFnDictionaryFieldName);
 
 			//TODO: slightly odd scenario 'When explicit #nullable enable is used, reference types should be rewritten to typeof(type) for initialization and value types should remain typeof(type?)'
