@@ -9,8 +9,8 @@ namespace Cypher
 	public class UltimateController : MonoBehaviour, IAgentAbility
 	{
 		[Header("Ultimate Highlight Options")]
-		[SerializeField] float highlightDuration;   // Highlight duration per beep.
-		[SerializeField] int numberOfBeeps;         // Number of beeps
+		[SerializeField] float highlightDuration;       // Highlight duration per beep.
+		[SerializeField] int numberOfBeeps;             // Number of beeps
 		[SerializeField] float timeBetweenBeeps;
 
 		[Header("Ultimate Hat Options")]
@@ -27,46 +27,36 @@ namespace Cypher
 		[Header("SOs")]
 		[SerializeField] AgentManagerChannelSO agentManagerChannelSO;
 
-		private Transform mainCam;
-
 		private Tweener hatRotator;
-
-		private void Awake()
-		{
-			mainCam = Camera.main.transform;
-		}
 
 		public void StartAbility()
 		{
 			if (cypherHat.gameObject.activeInHierarchy) return;
 
-			Ray ray = new Ray(mainCam.position, mainCam.forward);
-			RaycastHit hitInfo;
+			Vector3 targetPosition = SnapToEnemy.Instance.GetSnappedEnemy().position;
+			Vector3 targetBase = new Vector3(targetPosition.x, 0, targetPosition.z);
 
-			if (Physics.Raycast(ray, out hitInfo, 10))
+			Vector3[] hatArc = new Vector3[] { cypherCurvePoint.position, targetBase, targetBase + Vector3.up * activationHeight };
+
+			cypherHat.gameObject.SetActive(true);
+			cypherHat.transform.position = cypherHatStartPoint.position;
+
+			cypherHat.DOPath(hatArc, hatSpeed, PathType.CatmullRom).SetEase(Ease.InOutQuad)
+				.OnComplete(() =>
 			{
-				Vector3[] hatArc = new Vector3[] { cypherCurvePoint.position, hitInfo.point, hitInfo.point + Vector3.up * activationHeight };
+				StopAllCoroutines();
 
-				cypherHat.gameObject.SetActive(true);
-				cypherHat.transform.position = cypherHatStartPoint.position;
-
-				cypherHat.DOPath(hatArc, hatSpeed, PathType.CatmullRom).SetEase(Ease.InOutQuad)
-					.OnComplete(() =>
-				{
-					StopAllCoroutines();
-
-					hatRotator.Kill();
-					hatRotator = cypherHat.DORotate(new Vector3(0, 360, 0), hatRotateSpeedAfterActivation, RotateMode.LocalAxisAdd);
-					hatRotator.SetEase(Ease.Linear);
-					hatRotator.SetLoops(-1, LoopType.Incremental);
-
-					StartCoroutine(UltimateBeeps());
-				});
-
-				hatRotator = cypherHat.DORotate(new Vector3(0, 360, 0), hatRotateSpeedDuringArc, RotateMode.LocalAxisAdd);
+				hatRotator.Kill();
+				hatRotator = cypherHat.DORotate(new Vector3(0, 360, 0), hatRotateSpeedAfterActivation, RotateMode.LocalAxisAdd);
 				hatRotator.SetEase(Ease.Linear);
 				hatRotator.SetLoops(-1, LoopType.Incremental);
-			}
+
+				StartCoroutine(UltimateBeeps());
+			});
+
+			hatRotator = cypherHat.DORotate(new Vector3(0, 360, 0), hatRotateSpeedDuringArc, RotateMode.LocalAxisAdd);
+			hatRotator.SetEase(Ease.Linear);
+			hatRotator.SetLoops(-1, LoopType.Incremental);
 		}
 
 		private IEnumerator UltimateBeeps()

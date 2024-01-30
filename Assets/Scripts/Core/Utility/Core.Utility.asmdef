@@ -1,8 +1,8 @@
 {
-    "name": "SO",
+    "name": "Core.Utility",
     "rootNamespace": "",
     "references": [
-        "GUID:8d273d9e47f9a0344bafba8db4d74482",
+        "GUID:9822b735367add64294aa9c0416f41e2",
         "GUID:2af87938893bbbe4887ff2007eaa0e15"
     ],
     "includePlatforms": [],

@@ -1,4 +1,5 @@
 using Enums;
+using Interfaces;
 using Managers;
 using SO;
 using UnityEngine;
@@ -6,7 +7,7 @@ using UnityEngine.Rendering.Universal;
 
 namespace Cypher
 {
-	public class Cypher : MonoBehaviour
+	public class Cypher : AgentBase
 	{
 		[SerializeField] AgentState currentState = AgentState.NONE;
 
@@ -16,6 +17,7 @@ namespace Cypher
 
 		[Header("SOs")]
 		[SerializeField] CypherMainChannelSO cypherMainChannelSO;
+		[SerializeField] AgentManagerChannelSO agentManagerChannelSO;
 
 		private Camera mainCam;
 
@@ -25,6 +27,8 @@ namespace Cypher
 			currentState = AgentState.NONE;
 
 			mainCam.GetUniversalAdditionalCameraData().cameraStack.Add(gunCam);
+
+			agentManagerChannelSO.RaiseSetPlayer(this);
 		}
 
 		private void OnEnable()

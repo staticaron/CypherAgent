@@ -1741,10 +1741,12 @@ MonoBehaviour:
   cypherHat: {fileID: 4815651821949594137}
   cypherCurvePoint: {fileID: 1867709219}
   cypherHatStartPoint: {fileID: 1495884478}
+  hatSpeed: 1
+  activationHeight: 0.5
+  hatRotateSpeedDuringArc: 0.5
+  hatRotateSpeedAfterActivation: 2
   agentManagerChannelSO: {fileID: 11400000, guid: bfeba09c4aa1a1c46a94a1173fe5117f,
     type: 2}
-  point: {x: 0, y: 0, z: 0}
-  hatSpeed: 1
 --- !u!114 &999251657305675118
 MonoBehaviour:
   m_ObjectHideFlags: 0
