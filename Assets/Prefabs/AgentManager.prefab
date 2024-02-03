@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4694401115497647427}
   - component: {fileID: 4694401115497647426}
+  - component: {fileID: 1197981375}
   m_Layer: 0
   m_Name: AgentManager
   m_TagString: Untagged
@@ -44,5 +45,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09dacb64673caea40bdacd92fcc86386, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  agentManagerChannelSO: {fileID: 11400000, guid: bfeba09c4aa1a1c46a94a1173fe5117f,
+    type: 2}
+  enemyContainer:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  teammateContainer: []
+  player: {fileID: 0}
+--- !u!114 &1197981375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4694401115497647428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7821a7fd38b81d14693c4a63d367afd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxReach: 10
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 4096
+  maxDistanceToSnap: 200
+  snappedEnemy: {fileID: 0}
   agentManagerChannelSO: {fileID: 11400000, guid: bfeba09c4aa1a1c46a94a1173fe5117f,
     type: 2}

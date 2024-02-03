@@ -26,12 +26,14 @@ namespace Cypher
 
 		[Header("SOs")]
 		[SerializeField] AgentManagerChannelSO agentManagerChannelSO;
+		[SerializeField] UIChannelSO uiChannelSO;
 
 		private Tweener hatRotator;
 
 		public void StartAbility()
 		{
 			if (cypherHat.gameObject.activeInHierarchy) return;
+			uiChannelSO.RaiseSetAbilityState(Enums.AbilityType.ULT, Enums.IconState.ACTIVATE);
 
 			Vector3 targetPosition = SnapToEnemy.Instance.GetSnappedEnemy().position;
 			Vector3 targetBase = new Vector3(targetPosition.x, 0, targetPosition.z);
@@ -50,6 +52,9 @@ namespace Cypher
 				hatRotator = cypherHat.DORotate(new Vector3(0, 360, 0), hatRotateSpeedAfterActivation, RotateMode.LocalAxisAdd);
 				hatRotator.SetEase(Ease.Linear);
 				hatRotator.SetLoops(-1, LoopType.Incremental);
+
+				uiChannelSO.RaiseResetIconSize();
+				uiChannelSO.RaiseSetAbilityState(Enums.AbilityType.ULT, Enums.IconState.ACTIVE);
 
 				StartCoroutine(UltimateBeeps());
 			});

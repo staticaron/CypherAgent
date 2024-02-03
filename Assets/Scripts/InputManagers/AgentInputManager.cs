@@ -20,6 +20,7 @@ namespace InputManagers
 		private UltimateController ultimateController;
 
 		[SerializeField] CypherMainChannelSO cypherMainChannelSO;
+		[SerializeField] UIChannelSO uiChannelSO;
 
 		private void Awake()
 		{

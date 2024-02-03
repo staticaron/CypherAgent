@@ -39,6 +39,7 @@ namespace Cypher
 
 		[Header("SOs")]
 		[SerializeField] CypherMainChannelSO cypherMainChannelSO;
+		[SerializeField] UIChannelSO uiChannelSO;
 
 
 
@@ -117,6 +118,7 @@ namespace Cypher
 			}
 
 			active = true;
+			uiChannelSO.RaiseSetAbilityState(AbilityType.ABILITY_1, IconState.ACTIVATE);
 
 			cypherMainChannelSO.RaiseSetState(AgentState.ABILITY);
 		}
@@ -135,6 +137,7 @@ namespace Cypher
 
 			lineRenderer.positionCount = 0;
 
+			uiChannelSO.RaiseResetIconSize();
 			cypherMainChannelSO.RaiseSetState(AgentState.NONE);
 		}
 
@@ -144,6 +147,8 @@ namespace Cypher
 			instance.transform.parent = propsHolder;
 
 			activeDecon = instance.GetComponent<CypherCamController>();
+
+			uiChannelSO.RaiseSetAbilityState(AbilityType.ABILITY_1, IconState.ACTIVE);
 		}
 
 		public void RecallDecon()

@@ -24,6 +24,7 @@ namespace Cypher
 
 		[Header("SOs")]
 		[SerializeField] CypherMainChannelSO cypherMainChannelSO;
+		[SerializeField] UIChannelSO uiChannelSO;
 
 		private bool isInRange = false;
 		private bool canSpawnTripWire = false;
@@ -83,11 +84,13 @@ namespace Cypher
 			cypherMainChannelSO.RaiseSetState(AgentState.ABILITY2);
 
 			active = true;
+			uiChannelSO.RaiseSetAbilityState(AbilityType.ABILITY_2, IconState.ACTIVATE);
 		}
 
 		public void EndAbility()
 		{
 			active = false;
+			uiChannelSO.RaiseResetIconSize();
 
 			handLineRenderer.positionCount = 0;
 
@@ -104,6 +107,8 @@ namespace Cypher
 
 			SpawnTripWire();
 			EndAbility();
+
+			uiChannelSO.RaiseSetAbilityState(AbilityType.ABILITY_2, IconState.ACTIVE);
 		}
 
 		public void Secondary()
